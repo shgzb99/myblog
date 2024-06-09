@@ -1,0 +1,69 @@
+name: Deploy Hexo Blog
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "20"
+
+      # - name: Install dependencies
+      #   run: npm install
+
+      # - name: Generate static files
+      #   run: npm run build
+
+      # - name: Deploy to GitHub Pages
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./public
+
+      # - name: Setup Debug Session
+      #   uses: csexton/debugger-action@master
+
+      # - name: Build Blog # 编译创建静态博客文件
+      #   run: |
+      #     ./node_modules/hexo/bin/hexo clean
+      #     ./node_modules/hexo/bin/hexo g
+      #     echo "build blog successful"
+      # - name: Deploy DoubleAm's Blog # 设置 git 信息并推送静态博客文件
+      #   run: |
+      #     git config --global user.name "shgzb99"
+      #     git config --global user.email "lanhaitao@gmail.com"
+      #     ./node_modules/hexo/bin/hexo deploy
+
+      # - run: echo "Deploy Successful!${{ secrets.TOKEN }}"
+
+      - name: Setup Hexo
+        env:
+          ACTION_DEPLOY_KEY: ${{ secrets.HEXO_DEPLOY_KEY }}
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$ACTION_DEPLOY_KEY" > ~/.ssh/id_rsa
+          chmod 700 ~/.ssh
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          git config --global user.email "lanhaitao@gmail.com"
+          git config --global user.name "shgzb99"
+          npm install hexo-cli -g
+          npm install
+
+      - name: Setup Debug Session
+        uses: csexton/debugger-action@master
+
+      - name: Deploy
+        run: |
+          hexo clean
+          hexo deploy
