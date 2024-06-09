@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  hexo:
+    image: node:20
+    container_name: hexo_blog
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    command: sh -c "npm install hexo-cli -g && npm install && hexo server -p 4000"
+    ports:
+      - "${BLOG_PORT}:${BLOG_PORT}"

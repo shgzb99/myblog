@@ -5,7 +5,7 @@ Welcome to [Hexo](https://hexo.io/)! This is your very first post. Check [docume
 
 ## Quick Start
 
-### Create a new post
+### Create a new post 创建一篇博客
 
 ``` bash
 $ hexo new "My New Post"
